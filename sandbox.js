@@ -3,10 +3,16 @@ window.onload = function() {
 }
 
 function render(map) {
-  var k = Math.floor(Math.random() * map.tiles.length)
+//  var k = Math.floor(Math.random() * map.tiles.length)
 
-  console.log(k)
-  console.log(map.tiles[k])
+//  console.log(k)
+//  console.log(map.tiles[k])
+
+  var terrain = {'dirt':5,'grass':11}
+
+  var chunk = new Chunk(10,terrain.dirt)
+
+  console.log(terrain.dirt)
 
   var canvas = document.getElementById("canvas")
   canvas.width = window.innerWidth
@@ -14,9 +20,22 @@ function render(map) {
 
   var context = canvas.getContext("2d")
 
-  context.drawImage(map.img,map.tiles[k].x,map.tiles[k].y,
-                                map.tileWidth,map.tileHeight,
-                            0,0,map.tileWidth,map.tileHeight)
+  var k = 0
+  var l = 0
+
+  for(var k = 0; k < chunk.tile.length; k++) {
+    for(var l = 0; l < chunk.tile[k].length; l++) {
+      context.drawImage(map.img,
+                        map.tiles[chunk.terrain].x,
+                        map.tiles[chunk.terrain].y,
+                        map.tileWidth,
+                        map.tileHeight,
+                        5 + (map.tileWidth + 5)* l,
+                        5 + (map.tileHeight + 5) * k,
+                        map.tileWidth,
+                        map.tileHeight)
+    }
+  }
 }
 
 function Tilemap(image,tileWidth,tileHeight,callback) {
@@ -41,4 +60,18 @@ function Tilemap(image,tileWidth,tileHeight,callback) {
 function Tile(x,y) {
   this.x = x
   this.y = y
+}
+
+function Chunk(size,terrain) {
+  this.terrain = terrain
+  this.tile = Array(size)
+  for(var i = 0; i < size; i++) {
+    this.tile[i] = Array(size)
+  }
+
+  for(var i = 0; i < size; i++) {
+    for(var j = 0; j < size; j++) {
+      this.tile[i][j] = terrain
+    }
+  }
 }
